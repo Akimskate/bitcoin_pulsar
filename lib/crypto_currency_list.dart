@@ -1,8 +1,8 @@
-import 'dart:convert';
-
 import 'package:crypto_currencies/api/api_client.dart';
 import 'package:crypto_currencies/chart_widget.dart';
 import 'package:crypto_currencies/theme/theme_model.dart';
+import 'package:crypto_currencies/token_history_price.dart';
+import 'package:crypto_currencies/token_info.dart';
 import 'package:flutter/material.dart';
 
 import 'package:crypto_currencies/crypto_currency_data.dart';
@@ -18,22 +18,31 @@ class CryptoCurrencyList extends StatefulWidget {
 }
 
 class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
-  List<CryptoCurrencyData> data = [];
+  List<CryptoCurrencyData> _tokensList = [];
   var isLoaded = false;
+  List<TokenHistoryPrice> wickList = [];
+  List<TokenInfo> tokenInfo = [];
+
+  late int _pageNumber;
+
 
   @override
   void initState() {
     super.initState();
+    _pageNumber = 1;
+    _tokensList = [];
     getData();
   }
 
   getData() async {
-    data = (await ApiClient().getCryptoCurrencies());
-    if (data != null) {
-      setState(() {
-        isLoaded = true;
-      });
-    }
+    var data = (await ApiClient().getCryptoCurrencies(_pageNumber));
+    setState(() {
+      isLoaded = true;
+      _pageNumber = _pageNumber + 1;
+      _tokensList.addAll(data);
+      
+      
+    });
   }
 
   Future<void> _pullRefresh() async {
@@ -66,58 +75,64 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
           replacement: const Center(child: CircularProgressIndicator()),
           child: RefreshIndicator(
             onRefresh: _pullRefresh,
-            child: ListView(
-              children: _buildList(),
+            child: ListView.builder(
+              itemCount: _tokensList.length,
+              itemBuilder: (BuildContext context, int index) {
+                final token = _tokensList[index];
+                if (index == _tokensList.length -3) {
+                  
+              getData();
+            }
+                return Card(
+                  child: ListTile(
+                      title: Text(token.name ?? ''),
+                      subtitle: Text(token.symbol!.toUpperCase()),
+                      leading: Image.network(
+                        token.image!,
+                        height: 40,
+                      ),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '\$${token.currentPrice!.toStringAsFixed(2)}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            token.priceChangePercentage?.toStringAsFixed(2) ??
+                                '' '%',
+                            style: token.priceChangePercentage! >= 0
+                                ? const TextStyle(
+                                    color: Color.fromARGB(255, 27, 245, 35),
+                                  )
+                                : const TextStyle(
+                                    color: Color.fromARGB(255, 246, 68, 55),
+                                  ),
+                          ),
+                        ],
+                      ),
+                      onTap: () async {
+                        String? cryptocurrency = token.id;
+                        final tokenInfo =
+                            await ApiClient().getTokenInfo(cryptocurrency!);
+                        await ApiClient().getHistoryTokenPrice(cryptocurrency);
+                        print(tokenInfo);
+
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              ChartWidget(tokenInfo: tokenInfo),
+                        ));
+                      }),
+                );
+              },
             ),
           ),
         ),
-        // floatingActionButton: FloatingActionButton(
-        //   child: const Icon(Icons.refresh),
-        //   onPressed: () => getData(),
-        // ),
       );
     });
-  }
-
-  List<Widget> _buildList() {
-    return data
-        .map((CryptoCurrencyData items) => Card(
-              child: ListTile(
-                  title: Text(items.name!),
-                  subtitle: Text(items.symbol!.toUpperCase()),
-                  leading: Image.network(
-                    items.image!,
-                    height: 40,
-                  ),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '\$${items.currentPrice!.toStringAsFixed(2)}',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        items.priceChangePercentage!.toStringAsFixed(2) + '%',
-                        style: items.priceChangePercentage! >= 0
-                            ? const TextStyle(
-                                color: Color.fromARGB(255, 27, 245, 35),
-                              )
-                            : const TextStyle(
-                                color: Color.fromARGB(255, 246, 68, 55),
-                              ),
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ChartWidget(),
-                    ));
-                  }),
-            ))
-        .toList();
   }
 }

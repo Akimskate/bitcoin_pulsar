@@ -1,4 +1,5 @@
 class CryptoCurrencyData {
+  String? id;
   String? symbol;
   String? name;
   String? image;
@@ -7,7 +8,8 @@ class CryptoCurrencyData {
   num? priceChangePercentage;
   
 
-  CryptoCurrencyData({
+  CryptoCurrencyData(key, value, {
+    this.id,
     this.symbol,
     this.name,
     this.image,
@@ -17,22 +19,24 @@ class CryptoCurrencyData {
   });
 
   CryptoCurrencyData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     symbol = json['symbol'];
     name = json['name'];
     image = json['image'];
     currentPrice = json['current_price'];
     marketCapRank = json['market_cap_rank'];
-    priceChangePercentage = json["price_change_percentage_24h"];
+    priceChangePercentage = json["price_change_percentage_24h"] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['symbol'] = this.symbol;
-    data['name'] = this.name;
-    data['image'] = this.image;
-    data['current_price'] = this.currentPrice;
-    data['market_cap_rank'] = this.marketCapRank;
-    data["price_change_percentage_24h"] = this.priceChangePercentage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['symbol'] = symbol;
+    data['name'] = name;
+    data['image'] = image;
+    data['current_price'] = currentPrice;
+    data['market_cap_rank'] = marketCapRank;
+    data["price_change_percentage_24h"] = priceChangePercentage;
 
     return data;
   }

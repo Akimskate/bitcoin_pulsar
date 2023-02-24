@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'crypto_currency_list.dart';
 
-void main() => runApp(CryptoCurrencyTracker());
+void main() => runApp(const CryptoCurrencyTracker());
 
 
 class CryptoCurrencyTracker extends StatelessWidget {
   const CryptoCurrencyTracker({Key? key}) : super(key: key);
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class CryptoCurrencyTracker extends StatelessWidget {
       title: 'Bitcoin-pulsar',
       
       theme: themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
-      home: CryptoCurrencyList(),
+      home: const CryptoCurrencyList(),
     );
   }));
 
