@@ -3,9 +3,12 @@
 import 'package:crypto_currencies/token_info.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:crypto_currencies/token_history_price.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChartWidget extends StatefulWidget {
   final TokenInfo tokenInfo;
@@ -24,6 +27,13 @@ class _ChartWidgetState extends State<ChartWidget> {
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
   ];
+
+  var style = GoogleFonts.poppins(
+      textStyle: const TextStyle(
+    fontSize: 15,
+  ));
+
+  bool status = false;
 
   List<FlSpot> spots = wickList.asMap().entries.map((e) {
     return FlSpot(e.key.toDouble(), e.value.high!.toDouble());
@@ -60,7 +70,10 @@ class _ChartWidgetState extends State<ChartWidget> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey[800],
+                    color: Theme.of(context).brightness == Brightness.light
+      ? Colors.grey[100]
+      : Colors.grey[800],
+                    
                   ),
                   height: 300,
                   child: Stack(
@@ -73,7 +86,7 @@ class _ChartWidgetState extends State<ChartWidget> {
                                       item1.y > item2.y ? item1 : item2)
                                   .y
                                   .toString()) *
-                              1.2,
+                              1.4,
                           titlesData: FlTitlesData(
                             show: true,
                             rightTitles: AxisTitles(
@@ -123,23 +136,46 @@ class _ChartWidgetState extends State<ChartWidget> {
                         ),
                       ),
                       Center(
-                        child: Column(
-                            children: 
-                                  [const SizedBox(height: 10,),
-                                    Text(widget
-                                  .tokenInfo.marketData.currentPrice!.usd
-                                  .toString() + '\$',
-                                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 6,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                    Text(widget.tokenInfo.marketData.priceChange24h!.toStringAsFixed(2) + '\$', style: const TextStyle(fontSize: 15,),),
-                                    const SizedBox(width: 6,),
-                                    Text(widget.tokenInfo.marketData.priceChangePercentage24h!.toStringAsFixed(2) + '%', style: TextStyle(fontSize: 15, color: widget.tokenInfo.marketData.priceChangePercentage24h! > 0 ? Colors.green : Colors.red),),
-                                  ],)
-                                ]),
+                        child: Column(children: [
+                          const SizedBox(height: 10),
+                          Text(
+                            widget.tokenInfo.marketData.currentPrice!.usd
+                                    .toString() +
+                                '\$',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                widget.tokenInfo.marketData.priceChange24h!
+                                        .toStringAsFixed(2) +
+                                    '\$',
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                widget.tokenInfo.marketData
+                                        .priceChangePercentage24h!
+                                        .toStringAsFixed(2) +
+                                    '%',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: widget.tokenInfo.marketData
+                                                .priceChangePercentage24h! >
+                                            0
+                                        ? Colors.green
+                                        : Colors.red),
+                              ),
+                            ],
+                          )
+                        ]),
                       ),
                     ],
                   ),
@@ -152,16 +188,72 @@ class _ChartWidgetState extends State<ChartWidget> {
                 padding: const EdgeInsets.all(18.0),
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.grey[800],
+                      color: Theme.of(context).brightness == Brightness.light
+      ? Colors.grey[100]
+      : Colors.grey[800],
                       borderRadius: BorderRadius.circular(10)),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: HtmlWidget(
-                      widget.tokenInfo.description.en,
-                      textStyle: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
-                      ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Price Notification',
+                              style: style,
+                              ),
+                            
+                            const Spacer(),
+                            FlutterSwitch(
+                              width: 45.0,
+                              height: 25.0,
+                              activeColor: Color.fromARGB(253, 100, 97, 97),
+                              toggleSize: 15.0,
+                              value: status,
+                              switchBorder: Border.all(
+                                color: Colors.white,
+                                width: 1.2,
+                              ),
+                              borderRadius: 30.0,
+                              padding: 4.0,
+                              showOnOff: false,
+                              onToggle: (val) {
+                                setState(() {
+                                  status = val;
+                                });
+                              },
+                            ),
+                            const SizedBox(
+                              width: 15,
+                            )
+                          ],
+                        ),
+                        const Divider(
+                          thickness: 1,
+                        ),
+                        HtmlWidget(
+                          widget.tokenInfo.description.en,
+                          textStyle: style,
+                        ),
+                        const Divider(
+                          thickness: 1,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'Homepage',
+                              style: style,
+                            ),
+                            Spacer(),
+                            Linkify(
+                              onOpen: (link) => _launch(),
+                              text: widget.tokenInfo.links.homepage.first,
+                              linkStyle: style,
+                              ),
+                            
+                          ],
+                        )
+                      ],
                     ),
                   ),
                 ),
@@ -171,5 +263,14 @@ class _ChartWidgetState extends State<ChartWidget> {
         ),
       ),
     );
+  }
+
+  void _launch() async {
+    var url = widget.tokenInfo.links.homepage.first;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:crypto_currencies/splash_screen/splash_screen.dart';
 import 'package:crypto_currencies/theme/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,8 +22,9 @@ class CryptoCurrencyTracker extends StatelessWidget {
       title: 'Bitcoin-pulsar',
       
       theme: themeNotifier.isDark ? ThemeData.dark() : ThemeData.light(),
-      home: const CryptoCurrencyList(),
+      home: Splash(),
     );
   }));
 
 }}
+
