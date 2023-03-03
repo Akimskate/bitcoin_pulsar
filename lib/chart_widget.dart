@@ -9,6 +9,8 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:crypto_currencies/token_history_price.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class ChartWidget extends StatefulWidget {
   final TokenInfo tokenInfo;
@@ -36,7 +38,7 @@ class _ChartWidgetState extends State<ChartWidget> {
   bool status = false;
 
   List<FlSpot> spots = wickList.asMap().entries.map((e) {
-    return FlSpot(e.key.toDouble(), e.value.high!.toDouble());
+    return FlSpot(e.value.time!.toDouble(), e.value.high!.toDouble());
   }).toList();
 
   @override
@@ -71,9 +73,8 @@ class _ChartWidgetState extends State<ChartWidget> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Theme.of(context).brightness == Brightness.light
-      ? Colors.grey[100]
-      : Colors.grey[800],
-                    
+                        ? Colors.grey[100]
+                        : Colors.grey[800],
                   ),
                   height: 300,
                   child: Stack(
@@ -96,7 +97,19 @@ class _ChartWidgetState extends State<ChartWidget> {
                               sideTitles: SideTitles(showTitles: false),
                             ),
                             bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                getTitlesWidget: (value, meta) {
+                                  String dateTimeString = DateFormat('MMM')
+                                      .format(
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              value.toInt()));
+                                  return Padding(
+                                    padding: const EdgeInsets.all(1),
+                                    child: Text(dateTimeString),
+                                  );
+                                },
+                              ),
                             ),
                             leftTitles: AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
@@ -189,8 +202,8 @@ class _ChartWidgetState extends State<ChartWidget> {
                 child: Container(
                   decoration: BoxDecoration(
                       color: Theme.of(context).brightness == Brightness.light
-      ? Colors.grey[100]
-      : Colors.grey[800],
+                          ? Colors.grey[100]
+                          : Colors.grey[800],
                       borderRadius: BorderRadius.circular(10)),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -201,8 +214,7 @@ class _ChartWidgetState extends State<ChartWidget> {
                             Text(
                               'Price Notification',
                               style: style,
-                              ),
-                            
+                            ),
                             const Spacer(),
                             FlutterSwitch(
                               width: 45.0,
@@ -249,8 +261,7 @@ class _ChartWidgetState extends State<ChartWidget> {
                               onOpen: (link) => _launch(),
                               text: widget.tokenInfo.links.homepage.first,
                               linkStyle: style,
-                              ),
-                            
+                            ),
                           ],
                         )
                       ],

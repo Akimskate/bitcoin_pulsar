@@ -23,6 +23,7 @@ dependencies:
   flutter_switch: ^0.3.2
   url_launcher: ^6.1.10
   flutter_linkify: ^5.0.2
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
