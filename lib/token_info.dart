@@ -102,7 +102,7 @@ class Links {
 
 class MarketData {
   CurrentPrice? currentPrice;
-  double? priceChange24h;
+  num? priceChange24h;
   double? priceChangePercentage24h;
 
   MarketData(
@@ -138,7 +138,7 @@ class CurrentPrice {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
 
     data['usd'] = usd;
 

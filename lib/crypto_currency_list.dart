@@ -25,7 +25,6 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
 
   late int _pageNumber;
 
-
   @override
   void initState() {
     super.initState();
@@ -40,14 +39,14 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
       isLoaded = true;
       _pageNumber = _pageNumber + 1;
       _tokensList.addAll(data);
-      
-      
     });
   }
 
-  Future<void> _pullRefresh() async {
+  Future<void> _pullRefresh(BuildContext context) async {
+    var data = (await ApiClient().refreshCryptoCurrencies());
     setState(() {
-      getData();
+      isLoaded = true;
+      _tokensList.replaceRange(0, _tokensList.length, data);
     });
   }
 
@@ -74,15 +73,17 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
           visible: isLoaded,
           replacement: const Center(child: CircularProgressIndicator()),
           child: RefreshIndicator(
-            onRefresh: _pullRefresh,
+            onRefresh: () => _pullRefresh(context),
             child: ListView.builder(
+              shrinkWrap: false,
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
               itemCount: _tokensList.length,
               itemBuilder: (BuildContext context, int index) {
                 final token = _tokensList[index];
-                if (index == _tokensList.length -3) {
-                  
-              getData();
-            }
+                if (index == _tokensList.length - 3) {
+                  getData();
+                }
                 return Card(
                   child: ListTile(
                       title: Text(token.name ?? ''),
@@ -103,8 +104,8 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
                             height: 5,
                           ),
                           Text(
-                            token.priceChangePercentage?.toStringAsFixed(2) ??
-                                '' '%',
+                            token.priceChangePercentage!.toStringAsFixed(2) +
+                                '%',
                             style: token.priceChangePercentage! >= 0
                                 ? const TextStyle(
                                     color: Color.fromARGB(255, 27, 245, 35),

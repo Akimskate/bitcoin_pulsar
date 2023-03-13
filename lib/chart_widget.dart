@@ -10,7 +10,6 @@ import 'package:crypto_currencies/token_history_price.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 class ChartWidget extends StatefulWidget {
   final TokenInfo tokenInfo;
@@ -99,14 +98,19 @@ class _ChartWidgetState extends State<ChartWidget> {
                             bottomTitles: AxisTitles(
                               sideTitles: SideTitles(
                                 showTitles: true,
+                                reservedSize: 20,
+                                interval: 86400000 * 80,
                                 getTitlesWidget: (value, meta) {
                                   String dateTimeString = DateFormat('MMM')
                                       .format(
                                           DateTime.fromMillisecondsSinceEpoch(
                                               value.toInt()));
-                                  return Padding(
-                                    padding: const EdgeInsets.all(1),
-                                    child: Text(dateTimeString),
+                                  return SizedBox(
+                                    width: 100,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2),
+                                      child: Text(dateTimeString),
+                                    ),
                                   );
                                 },
                               ),
@@ -118,18 +122,6 @@ class _ChartWidgetState extends State<ChartWidget> {
                           borderData: FlBorderData(show: false),
                           gridData: FlGridData(
                             show: false,
-                            // getDrawingHorizontalLine: (value) {
-                            //   return FlLine(
-                            //     color: Color.fromARGB(255, 71, 74, 76),
-                            //     strokeWidth: 1,
-                            //   );
-                            // },
-                            // getDrawingVerticalLine: (value) {
-                            //   return FlLine(
-                            //     color: Color.fromARGB(255, 71, 74, 76),
-                            //     strokeWidth: 1,
-                            //   );
-                            // },
                           ),
                           lineBarsData: [
                             LineChartBarData(
@@ -219,7 +211,8 @@ class _ChartWidgetState extends State<ChartWidget> {
                             FlutterSwitch(
                               width: 45.0,
                               height: 25.0,
-                              activeColor: Color.fromARGB(253, 100, 97, 97),
+                              activeColor:
+                                  const Color.fromARGB(253, 100, 97, 97),
                               toggleSize: 15.0,
                               value: status,
                               switchBorder: Border.all(
@@ -256,7 +249,7 @@ class _ChartWidgetState extends State<ChartWidget> {
                               'Homepage',
                               style: style,
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Linkify(
                               onOpen: (link) => _launch(),
                               text: widget.tokenInfo.links.homepage.first,
