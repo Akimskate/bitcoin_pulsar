@@ -43,11 +43,12 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
   }
 
   Future<void> _pullRefresh(BuildContext context) async {
-    var data = (await ApiClient().refreshCryptoCurrencies());
+    var data = (await ApiClient().refreshCryptoCurrencies(_tokensList.length));
     setState(() {
       isLoaded = true;
       _tokensList.replaceRange(0, _tokensList.length, data);
     });
+    print(_tokensList.length);
   }
 
   @override

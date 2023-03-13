@@ -22,9 +22,9 @@ class ApiClient {
     }
   }
 
-  Future<List<CryptoCurrencyData>> refreshCryptoCurrencies() async {
+  Future<List<CryptoCurrencyData>> refreshCryptoCurrencies(int itemsLength) async {
   var _url =
-      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20';
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=$itemsLength';
     final response = await http.get(Uri.parse(_url));
     if (response.statusCode == 200) {
       List<CryptoCurrencyData> ccDataList = (json.decode(response.body) as List)
