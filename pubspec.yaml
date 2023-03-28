@@ -24,6 +24,7 @@ dependencies:
   url_launcher: ^6.1.10
   flutter_linkify: ^5.0.2
   intl: ^0.18.0
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:

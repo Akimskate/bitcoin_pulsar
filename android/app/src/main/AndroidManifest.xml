@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.crypto_currencies">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="crypto_currencies"
         android:name="${applicationName}"
@@ -32,6 +33,7 @@
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    
 
 <queries>
   <!-- If your app opens https URLs -->
