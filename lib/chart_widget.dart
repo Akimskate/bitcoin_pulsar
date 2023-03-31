@@ -87,6 +87,9 @@ class _ChartWidgetState extends State<ChartWidget> {
                                   .y
                                   .toString()) *
                               1.4,
+                          lineTouchData: LineTouchData(
+                            enabled: true,
+                          ),
                           titlesData: FlTitlesData(
                             show: true,
                             rightTitles: AxisTitles(
@@ -96,17 +99,19 @@ class _ChartWidgetState extends State<ChartWidget> {
                               sideTitles: SideTitles(showTitles: false),
                             ),
                             bottomTitles: AxisTitles(
+                              drawBehindEverything: false,
                               sideTitles: SideTitles(
+                                
                                 showTitles: true,
                                 reservedSize: 20,
-                                interval: 86400000 * 80,
+                                interval: 86400000 * 102,
                                 getTitlesWidget: (value, meta) {
                                   String dateTimeString = DateFormat('MMM')
                                       .format(
                                           DateTime.fromMillisecondsSinceEpoch(
                                               value.toInt()));
                                   return SizedBox(
-                                    width: 100,
+                                    width: 30,
                                     child: Padding(
                                       padding: const EdgeInsets.all(2),
                                       child: Text(dateTimeString),
