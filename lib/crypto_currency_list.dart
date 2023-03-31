@@ -1,7 +1,6 @@
 import 'package:crypto_currencies/api/api_client.dart';
 import 'package:crypto_currencies/chart_widget.dart';
 import 'package:crypto_currencies/theme/theme_model.dart';
-import 'package:crypto_currencies/token_history_price.dart';
 import 'package:crypto_currencies/token_info.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +19,8 @@ class CryptoCurrencyList extends StatefulWidget {
 class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
   List<CryptoCurrencyData> _tokensList = [];
   var isLoaded = false;
-  List<TokenHistoryPrice> wickList = [];
+  var isTokenPressed = false;
+
   List<TokenInfo> tokenInfo = [];
 
   late int _pageNumber;
@@ -87,6 +87,7 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
                 }
                 return Card(
                   child: ListTile(
+                      enabled: !isTokenPressed,
                       title: Text(token.name ?? ''),
                       subtitle: Text(token.symbol!.toUpperCase()),
                       leading: Image.network(
@@ -118,12 +119,17 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
                         ],
                       ),
                       onTap: () async {
+                        setState(() {
+                          isTokenPressed = true;
+                        });
                         String? cryptocurrency = token.id;
                         final tokenInfo =
                             await ApiClient().getTokenInfo(cryptocurrency!);
                         await ApiClient().getHistoryTokenPrice(cryptocurrency);
                         print(tokenInfo);
-
+                        setState(() {
+                          isTokenPressed = false;
+                        });
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
                               ChartWidget(tokenInfo: tokenInfo),
