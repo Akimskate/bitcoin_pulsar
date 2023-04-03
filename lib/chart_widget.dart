@@ -99,7 +99,6 @@ class _ChartWidgetState extends State<ChartWidget> {
                               sideTitles: SideTitles(showTitles: false),
                             ),
                             bottomTitles: AxisTitles(
-                              drawBehindEverything: false,
                               sideTitles: SideTitles(
                                 
                                 showTitles: true,
