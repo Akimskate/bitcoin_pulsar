@@ -14,7 +14,8 @@ class ApiClient {
     if (response.statusCode == 200) {
       List<CryptoCurrencyData> ccDataList = (json.decode(response.body) as List)
           .map((data) => CryptoCurrencyData.fromJson(data))
-          .toList(); 
+          .toList();
+          print(json.decode(response.body).runtimeType); 
       return ccDataList;
     } else {
       throw Exception('Failed to load');
@@ -29,6 +30,7 @@ class ApiClient {
       List<CryptoCurrencyData> ccDataList = (json.decode(response.body) as List)
           .map((data) => CryptoCurrencyData.fromJson(data))
           .toList();
+          print(json.decode(response.body).runtimeType); 
       return ccDataList;
     } else {
       throw Exception('Failed to load');
@@ -68,6 +70,7 @@ Future<TokenInfo> getTokenInfo(String cryptocurrency) async {
     final response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/$cryptocurrency'));
     if (response.statusCode == 200) {
       final tokenInfo = TokenInfo.fromJson(json.decode(response.body));
+          print(tokenInfo);
       return tokenInfo;
     } else {
       throw Exception('Failed to load');

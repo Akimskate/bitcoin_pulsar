@@ -33,5 +33,4 @@ For more information and history price since last year - click on token. You can
 <img align="center" width="150" height="300" src="screenshots/deeplonk_route.png">
 </p>
 
-
-The most 
+Since the public api client coingecko has a request limit, the application may crash during operation, in this case you need to wait more than 1 minute, and you can continue working again. This and other server response errors should be signaled by a notifier at the bottom of the page.

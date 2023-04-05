@@ -53,6 +53,7 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
       isLoaded = true;
       _tokensList.replaceRange(0, _tokensList.length, data);
     });
+    print(_tokensList.length);
   }
 
   Future<void> _checkStatusCode() async {
@@ -150,6 +151,7 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
                         final tokenInfo =
                             await ApiClient().getTokenInfo(cryptocurrency!);
                         await ApiClient().getHistoryTokenPrice(cryptocurrency);
+                        print(tokenInfo);
                         setState(() {
                           isTokenPressed = false;
                         });
