@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, deprecated_member_use
 
 import 'package:crypto_currencies/token_info.dart';
 import 'package:fl_chart/fl_chart.dart';

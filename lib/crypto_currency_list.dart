@@ -39,7 +39,7 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
   getData() async {
     _checkStatusCode();
     var data = (await ApiClient().getCryptoCurrencies(_pageNumber));
-    
+
     setState(() {
       isLoaded = true;
       _pageNumber = _pageNumber + 1;
@@ -53,44 +53,22 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
       isLoaded = true;
       _tokensList.replaceRange(0, _tokensList.length, data);
     });
-    print(_tokensList.length);
-   
   }
 
   Future<void> _checkStatusCode() async {
-    // final response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/ping'));
-    // if (response.statusCode == 200) {
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text('Error fetching data: ${response.statusCode}'),
-    //       backgroundColor: Colors.red,
-    //     ),
-    //   );
-    // }
     try {
-      
-      final response =
-          await http.get(Uri.parse('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'));
-      // Do something with the response.
-      if(response.statusCode == 200){
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text('data procced: ${response.statusCode}'),
-      //     backgroundColor: Colors.green,
-      //   ),
-      // );
-      
+      final response = await http.get(Uri.parse(
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'));
+      if (response.statusCode == 200) {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error fetching data: ${response.statusCode}'),
-          backgroundColor: Colors.red,
-        ),
-      );
+          SnackBar(
+            content: Text('Error fetching data: ${response.statusCode}'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } catch (e) {
-      // Handle the exception.
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
@@ -172,7 +150,6 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
                         final tokenInfo =
                             await ApiClient().getTokenInfo(cryptocurrency!);
                         await ApiClient().getHistoryTokenPrice(cryptocurrency);
-                        print(tokenInfo);
                         setState(() {
                           isTokenPressed = false;
                         });
