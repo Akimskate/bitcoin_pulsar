@@ -14,9 +14,10 @@ When starting app you can see spash screen
 Then opens main screen with listview builder, where you can see first 20 tokens sorted by market capitilazition, with most userful information.
 In this app implemented changind light and dark themes, and pagination - when scroll down to last last coin - downloading next 20 coins.
 
-
+<p>
 <img  width="150" height="300" src="screenshots/main_page_dark.png">
 <img  width="150" height="300" src="screenshots/main_page_light.png">
+</p>
 
 
 You can update information by pulldown action:
@@ -32,3 +33,5 @@ For more information and history price since last year - click on token. You can
 <img align="center" width="150" height="300" src="screenshots/deeplonk_route.png">
 </p>
 
+
+The most 
