@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 void main() => runApp(const CryptoCurrencyTracker());
 
 class CryptoCurrencyTracker extends StatelessWidget {
-  const CryptoCurrencyTracker({Key? key}) : super(key: key);
+  const CryptoCurrencyTracker({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +17,7 @@ class CryptoCurrencyTracker extends StatelessWidget {
             title: 'Bitcoin-pulsar',
             theme: themeNotifier.isDark
                 ? ThemeData.dark()
-                : ThemeData(
-                    brightness: Brightness.light,
-                    primarySwatch: Colors.blueGrey),
+                : ThemeData(brightness: Brightness.light, primarySwatch: Colors.blueGrey),
             home: Splash(),
           );
         }));
