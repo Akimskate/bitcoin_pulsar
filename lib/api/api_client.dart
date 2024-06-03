@@ -3,22 +3,19 @@ import 'dart:convert';
 import 'package:crypto_currencies/crypto_currency_data.dart';
 import 'package:crypto_currencies/token_history_price.dart';
 import 'package:crypto_currencies/token_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class ApiClient {
-  Future<List<CryptoCurrencyData>> getCryptoCurrencies(int _pageNumber) async {
-    var _url =
-        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=$_pageNumber';
+  Future<List<CryptoCurrencyData>> getCryptoCurrencies(int pageNumber) async {
+    var url =
+        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=$pageNumber';
     final response = await http.get(
-      Uri.parse(_url),
-      // headers: {
-      //   'x-cg-pro-api-key': 'CG-BriABfkuZBmeqKSxoHcWCdpQ',
-      // },
+      Uri.parse(url),
     );
     if (response.statusCode == 200) {
       List<CryptoCurrencyData> ccDataList =
           (json.decode(response.body) as List).map((data) => CryptoCurrencyData.fromJson(data)).toList();
-      print(json.decode(response.body).runtimeType);
       return ccDataList;
     } else {
       throw Exception('Failed to load');
@@ -26,13 +23,15 @@ class ApiClient {
   }
 
   Future<List<CryptoCurrencyData>> refreshCryptoCurrencies(int itemsLength) async {
-    var _url =
+    var url =
         'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=$itemsLength';
-    final response = await http.get(Uri.parse(_url));
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       List<CryptoCurrencyData> ccDataList =
           (json.decode(response.body) as List).map((data) => CryptoCurrencyData.fromJson(data)).toList();
-      print(json.decode(response.body).runtimeType);
+      if (kDebugMode) {
+        print(json.decode(response.body).runtimeType);
+      }
       return ccDataList;
     } else {
       throw Exception('Failed to load');
@@ -71,7 +70,9 @@ class ApiClient {
     final response = await http.get(Uri.parse('https://api.coingecko.com/api/v3/coins/$cryptocurrency'));
     if (response.statusCode == 200) {
       final tokenInfo = TokenInfo.fromJson(json.decode(response.body));
-      print(tokenInfo);
+      if (kDebugMode) {
+        print(tokenInfo);
+      }
       return tokenInfo;
     } else {
       throw Exception('Failed to load');

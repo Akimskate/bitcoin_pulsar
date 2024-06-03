@@ -4,7 +4,7 @@ import 'package:crypto_currencies/crypto_currency_list.dart';
 import 'package:flutter/material.dart';
 
 class Splash extends StatefulWidget {
-  Splash({Key? key}) : super(key: key);
+  Splash({super.key});
 
   @override
   State<Splash> createState() => _SplashState();
@@ -15,8 +15,7 @@ class _SplashState extends State<Splash> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const CryptoCurrencyList()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const CryptoCurrencyList()));
     });
   }
 

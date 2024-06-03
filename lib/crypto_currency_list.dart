@@ -2,6 +2,7 @@ import 'package:crypto_currencies/api/api_client.dart';
 import 'package:crypto_currencies/chart_widget.dart';
 import 'package:crypto_currencies/theme/theme_model.dart';
 import 'package:crypto_currencies/token_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:crypto_currencies/crypto_currency_data.dart';
@@ -10,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class CryptoCurrencyList extends StatefulWidget {
-  const CryptoCurrencyList({Key? key}) : super(key: key);
+  const CryptoCurrencyList({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -53,13 +54,15 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
       isLoaded = true;
       _tokensList.replaceRange(0, _tokensList.length, data);
     });
-    print(_tokensList.length);
+    if (kDebugMode) {
+      print(_tokensList.length);
+    }
   }
 
   Future<void> _checkStatusCode() async {
     try {
-      final response = await http.get(Uri.parse(
-          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'));
+      final response =
+          await http.get(Uri.parse('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'));
       if (response.statusCode == 200) {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -86,13 +89,9 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
           actions: [
             IconButton(
                 onPressed: () {
-                  themeNotifier.isDark
-                      ? themeNotifier.isDark = false
-                      : themeNotifier.isDark = true;
+                  themeNotifier.isDark ? themeNotifier.isDark = false : themeNotifier.isDark = true;
                 },
-                icon: Icon(themeNotifier.isDark
-                    ? Icons.nightlight_round
-                    : Icons.wb_sunny))
+                icon: Icon(themeNotifier.isDark ? Icons.nightlight_round : Icons.wb_sunny))
           ],
         ),
         body: Visibility(
@@ -102,8 +101,7 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
             onRefresh: () => _pullRefresh(context),
             child: ListView.builder(
               shrinkWrap: false,
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               itemCount: _tokensList.length,
               itemBuilder: (BuildContext context, int index) {
                 final token = _tokensList[index];
@@ -131,8 +129,7 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
                             height: 5,
                           ),
                           Text(
-                            token.priceChangePercentage!.toStringAsFixed(2) +
-                                '%',
+                            '${token.priceChangePercentage!.toStringAsFixed(2)}%',
                             style: token.priceChangePercentage! >= 0
                                 ? const TextStyle(
                                     color: Color.fromARGB(255, 27, 245, 35),
@@ -148,16 +145,16 @@ class CryptoCurrencyListStore extends State<CryptoCurrencyList> {
                           isTokenPressed = true;
                         });
                         String? cryptocurrency = token.id;
-                        final tokenInfo =
-                            await ApiClient().getTokenInfo(cryptocurrency!);
+                        final tokenInfo = await ApiClient().getTokenInfo(cryptocurrency!);
                         await ApiClient().getHistoryTokenPrice(cryptocurrency);
-                        print(tokenInfo);
+                        if (kDebugMode) {
+                          print(tokenInfo);
+                        }
                         setState(() {
                           isTokenPressed = false;
                         });
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              ChartWidget(tokenInfo: tokenInfo),
+                          builder: (context) => ChartWidget(tokenInfo: tokenInfo),
                         ));
                       }),
                 );

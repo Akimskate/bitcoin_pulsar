@@ -15,9 +15,9 @@ class ChartWidget extends StatefulWidget {
   final TokenInfo tokenInfo;
 
   const ChartWidget({
-    Key? key,
+    super.key,
     required this.tokenInfo,
-  }) : super(key: key);
+  });
 
   @override
   State<ChartWidget> createState() => _ChartWidgetState();
@@ -50,10 +50,7 @@ class _ChartWidgetState extends State<ChartWidget> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.tokenInfo.name +
-              ' (' +
-              widget.tokenInfo.symbol.toUpperCase() +
-              ')'),
+          title: Text('${widget.tokenInfo.name} (${widget.tokenInfo.symbol.toUpperCase()})'),
           centerTitle: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -71,9 +68,7 @@ class _ChartWidgetState extends State<ChartWidget> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.grey[100]
-                        : Colors.grey[800],
+                    color: Theme.of(context).brightness == Brightness.light ? Colors.grey[100] : Colors.grey[800],
                   ),
                   height: 300,
                   child: Stack(
@@ -81,34 +76,28 @@ class _ChartWidgetState extends State<ChartWidget> {
                       LineChart(
                         LineChartData(
                           minY: 0,
-                          maxY: double.parse(spots
-                                  .reduce((item1, item2) =>
-                                      item1.y > item2.y ? item1 : item2)
-                                  .y
-                                  .toString()) *
+                          maxY: double.parse(
+                                  spots.reduce((item1, item2) => item1.y > item2.y ? item1 : item2).y.toString()) *
                               1.4,
-                          lineTouchData: LineTouchData(
+                          lineTouchData: const LineTouchData(
                             enabled: true,
                           ),
                           titlesData: FlTitlesData(
                             show: true,
-                            rightTitles: AxisTitles(
+                            rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
                             ),
-                            topTitles: AxisTitles(
+                            topTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
                             ),
                             bottomTitles: AxisTitles(
                               sideTitles: SideTitles(
-                                
                                 showTitles: true,
                                 reservedSize: 20,
                                 interval: 86400000 * 102,
                                 getTitlesWidget: (value, meta) {
-                                  String dateTimeString = DateFormat('MMM')
-                                      .format(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              value.toInt()));
+                                  String dateTimeString =
+                                      DateFormat('MMM').format(DateTime.fromMillisecondsSinceEpoch(value.toInt()));
                                   return SizedBox(
                                     width: 30,
                                     child: Padding(
@@ -119,27 +108,24 @@ class _ChartWidgetState extends State<ChartWidget> {
                                 },
                               ),
                             ),
-                            leftTitles: AxisTitles(
+                            leftTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
                             ),
                           ),
                           borderData: FlBorderData(show: false),
-                          gridData: FlGridData(
+                          gridData: const FlGridData(
                             show: false,
                           ),
                           lineBarsData: [
                             LineChartBarData(
                                 spots: spots,
                                 isCurved: true,
-                                gradient:
-                                    LinearGradient(colors: gradientColors),
-                                dotData: FlDotData(show: false),
+                                gradient: LinearGradient(colors: gradientColors),
+                                dotData: const FlDotData(show: false),
                                 belowBarData: BarAreaData(
                                     show: true,
                                     gradient: LinearGradient(
-                                      colors: gradientColors
-                                          .map((e) => e.withOpacity(0.15))
-                                          .toList(),
+                                      colors: gradientColors.map((e) => e.withOpacity(0.15)).toList(),
                                     ))),
                           ],
                         ),
@@ -148,9 +134,7 @@ class _ChartWidgetState extends State<ChartWidget> {
                         child: Column(children: [
                           const SizedBox(height: 10),
                           Text(
-                            widget.tokenInfo.marketData.currentPrice!.usd
-                                    .toString() +
-                                '\$',
+                            '${widget.tokenInfo.marketData.currentPrice!.usd}\$',
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -161,24 +145,17 @@ class _ChartWidgetState extends State<ChartWidget> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                widget.tokenInfo.marketData.priceChange24h!
-                                        .toStringAsFixed(2) +
-                                    '\$',
+                                '${widget.tokenInfo.marketData.priceChange24h!.toStringAsFixed(2)}\$',
                                 style: const TextStyle(
                                   fontSize: 15,
                                 ),
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                widget.tokenInfo.marketData
-                                        .priceChangePercentage24h!
-                                        .toStringAsFixed(2) +
-                                    '%',
+                                '${widget.tokenInfo.marketData.priceChangePercentage24h!.toStringAsFixed(2)}%',
                                 style: TextStyle(
                                     fontSize: 15,
-                                    color: widget.tokenInfo.marketData
-                                                .priceChangePercentage24h! >
-                                            0
+                                    color: widget.tokenInfo.marketData.priceChangePercentage24h! > 0
                                         ? Colors.green
                                         : Colors.red),
                               ),
@@ -197,9 +174,7 @@ class _ChartWidgetState extends State<ChartWidget> {
                 padding: const EdgeInsets.all(18.0),
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? Colors.grey[100]
-                          : Colors.grey[800],
+                      color: Theme.of(context).brightness == Brightness.light ? Colors.grey[100] : Colors.grey[800],
                       borderRadius: BorderRadius.circular(10)),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -215,8 +190,7 @@ class _ChartWidgetState extends State<ChartWidget> {
                             FlutterSwitch(
                               width: 45.0,
                               height: 25.0,
-                              activeColor:
-                                  const Color.fromARGB(253, 100, 97, 97),
+                              activeColor: const Color.fromARGB(253, 100, 97, 97),
                               toggleSize: 15.0,
                               value: status,
                               switchBorder: Border.all(
