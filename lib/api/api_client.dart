@@ -9,7 +9,9 @@ import 'package:http/http.dart' as http;
 class ApiClient {
   Future<List<CryptoCurrencyData>> getCryptoCurrencies(int pageNumber) async {
     var url =
-        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=$pageNumber';
+        'https://api.coingecko.com/api/v3/coins/markets?&x_cg_demo_api_key=CG-BriABfkuZBmeqKSxoHcWCdpQ&vs_currency=usd&order=market_cap_desc&per_page=20&page=$pageNumber';
+
+    // https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=20&page=2&x_cg_demo_api_key=CG-BriABfkuZBmeqKSxoHcWCdpQ
     final response = await http.get(
       Uri.parse(url),
     );
